@@ -2,7 +2,7 @@
 require_once __DIR__ . '/config.php';
 function connectDb()
 {
-    try{
+    try {
         return new PDO(
             DSN,
             USER,
@@ -11,12 +11,12 @@ function connectDb()
             PDO::ERRMODE_EXCEPTION]
         );
     } catch (PDOException $e) {
-    echo $e->getMessage();
-    exit;
-}
+        echo $e->getMessage();
+        exit;
+    }
 }
 
 function h($str)
 {
-    return htmlspecialchars($str, ENT_QUOTES,'UTF-8');
+    return htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
 }
