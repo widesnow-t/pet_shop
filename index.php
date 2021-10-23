@@ -1,8 +1,11 @@
 <?php
 require_once __DIR__ . '/function.php';
 $dbh = connectDb();
-$sql = 'SELECT * FROM animals WHERE description LIKE "%おっとり%"';
+$sql = 'SELECT * FROM animals WHERE description LIKE :keyword';
 $stmt = $dbh->prepare($sql);
+$keyword = 'おっとり';
+$keyword = '%' . $keyword . '%';
+$stmt->bindParam(':keyword', $keyword, PDO::PARAM_STR);
 $stmt->execute();
 $animals = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
@@ -19,7 +22,7 @@ $animals = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <body>
     <h2>本日のペットご紹介!</h2>
-    <?php if (empty($keyword)): ?>
+    <?php if (empty($_GET)): ?>
     <form method="get">
         キーワード:<input type="text" name="keyword">
         <input type="submit">
