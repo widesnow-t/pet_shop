@@ -3,7 +3,7 @@ require_once __DIR__ . '/function.php';
 $dbh = connectDb();
 $sql = 'SELECT * FROM animals WHERE description LIKE :keyword';
 $stmt = $dbh->prepare($sql);
-$keyword = 'おっとり';
+$keyword = $_GET['keyword'];
 $keyword = '%' . $keyword . '%';
 $stmt->bindParam(':keyword', $keyword, PDO::PARAM_STR);
 $stmt->execute();
@@ -26,6 +26,8 @@ $animals = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <form method="get">
         キーワード:<input type="text" name="keyword">
         <input type="submit">
+    </form>
+        <?php else: ?>
         <ul>
             <?php foreach ($animals as $animal) : ?>
                 <li><?= h($animal['type'] . 'の' . $animal['classification'] . 'ちゃん') ?></li>
