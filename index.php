@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/function.php';
 $dbh = connectDb();
-$sql = 'SELECT * FROM animals';
+$sql = 'SELECT * FROM animals WHERE description LIKE "%おっとり%"';
 $stmt = $dbh->prepare($sql);
 $stmt->execute();
 $animals = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -19,16 +19,20 @@ $animals = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <body>
     <h2>本日のペットご紹介!</h2>
-    <ul>
-        <?php foreach ($animals as $animal) : ?>
-
-            <li><?= h($animal['type'] . 'の' . $animal['classification'] . 'ちゃん') ?></li>
-            <li><?= h($animal['description']) ?></li>
-            <li><?= h($animal['birthplace']) ?></li>
-            <li><?= h($animal['birthday']) ?></li>
-            <hr>
-        <?php endforeach; ?>
-    </ul>
+    <?php if (empty($keyword)): ?>
+    <form method="get">
+        キーワード:<input type="text" name="keyword">
+        <input type="submit">
+        <ul>
+            <?php foreach ($animals as $animal) : ?>
+                <li><?= h($animal['type'] . 'の' . $animal['classification'] . 'ちゃん') ?></li>
+                <li><?= h($animal['description']) ?></li>
+                <li><?= h($animal['birthplace']) ?></li>
+                <li><?= h($animal['birthday']) ?></li>
+                <hr>
+            <?php endforeach; ?>
+        </ul>
+        <?php endif; ?>
 
 </body>
 
