@@ -1,8 +1,11 @@
 <?php
 require_once __DIR__ . '/function.php';
 $dbh = connectDb();
-$sql = 'SELECT * FROM animals';
+$sql = 'SELECT * FROM animals WHERE description LIKE :keyword';
 $stmt = $dbh->prepare($sql);
+$keyword = $_GET['keyword'];
+$keyword = '%' . $keyword . '%';
+$stmt->bindParam(':keyword', $keyword, PDO::PARAM_STR);
 $stmt->execute();
 $animals = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
@@ -19,16 +22,22 @@ $animals = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <body>
     <h2>本日のペットご紹介!</h2>
-    <ul>
-        <?php foreach ($animals as $animal) : ?>
-
-            <li><?= h($animal['type'] . 'の' . $animal['classification'] . 'ちゃん') ?></li>
-            <li><?= h($animal['description']) ?></li>
-            <li><?= h($animal['birthplace']) ?></li>
-            <li><?= h($animal['birthday']) ?></li>
-            <hr>
-        <?php endforeach; ?>
-    </ul>
+    <?php if (empty($_GET)): ?>
+    <form method="get">
+        キーワード:<input type="text" name="keyword">
+        <input type="submit">
+    </form>
+        <?php else: ?>
+        <ul>
+            <?php foreach ($animals as $animal) : ?>
+                <li><?= h($animal['type'] . 'の' . $animal['classification'] . 'ちゃん') ?></li>
+                <li><?= h($animal['description']) ?></li>
+                <li><?= h($animal['birthplace']) ?></li>
+                <li><?= h($animal['birthday']) ?></li>
+                <hr>
+            <?php endforeach; ?>
+        </ul>
+        <?php endif; ?>
 
 </body>
 
